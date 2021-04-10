@@ -21,6 +21,7 @@ class Sender:
 
     # HOSTNAME = socket.gethostbyname('')
     HOSTNAME = 'localhost'
+    PORT=35000
 
     TIMEOUT = 2
     RECV_SIZE = 256
@@ -88,7 +89,7 @@ class Receiver:
     def connect_to_sender(self):
         try:
             # Connect to the sender using its socket address tuple.
-            self.socket.connect((Client.SERVER_HOSTNAME, Server.PORT))
+            self.socket.connect((Receiver.SERVER_HOSTNAME, Sender.PORT))
         except Exception as msg:
             print(msg)
             sys.exit(1)
