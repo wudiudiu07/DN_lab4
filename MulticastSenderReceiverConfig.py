@@ -16,7 +16,12 @@ from config import *
 ########################################################################
 # Broadcast Server class
 ########################################################################
-
+command = {
+    'getdir' : 1,
+    'deleteroom' : 2,
+    'makeroom' : 3,
+    'bye' : 4
+}
 class Sender:
 
     # HOSTNAME = socket.gethostbyname('')
