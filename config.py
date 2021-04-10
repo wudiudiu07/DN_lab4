@@ -8,7 +8,8 @@
 # Two sample multicast addresses to experiment with.
 
 MULTICAST_ADDRESS = "239.0.0.10"
-# MULTICAST_ADDRESS = "239.0.0.11"
+#MULTICAST_ADDRESS = "239.0.0.11"
+
 
 # The UDP port to which we will be sending/receiving.
 
@@ -21,8 +22,8 @@ MULTICAST_PORT = 2000
 # example, you may have multiple network interfaces, you may have to
 # specify the interface explicitly, by using its address.
 
-# RX_IFACE_ADDRESS = "0.0.0.0"
-RX_IFACE_ADDRESS = "192.168.2.37"
+RX_IFACE_ADDRESS = "0.0.0.0"
+#RX_IFACE_ADDRESS = "192.168.2.37"
 # RX_IFACE_ADDRESS = "172.17.72.133"
 
 # The receiver socket bind address. This is used at the IP/UDP level
@@ -31,9 +32,9 @@ RX_IFACE_ADDRESS = "192.168.2.37"
 # groups on the same port, each application may receive all multicast
 # group transmissions. 
 
-RX_BIND_ADDRESS = MULTICAST_ADDRESS
-# RX_BIND_ADDRESS = "0.0.0.0"
-# RX_BIND_ADDRESS = ""
+#RX_BIND_ADDRESS = MULTICAST_ADDRESS
+RX_BIND_ADDRESS = "0.0.0.0"
+#RX_BIND_ADDRESS = ""
 
 ########################################################################
 # Define some things used in MulticastSenderReceiverConfig.py
