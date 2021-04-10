@@ -77,7 +77,14 @@ class Receiver:
         
         self.get_socket()
         self.receive_forever()
-
+    def connect_to_CRDS(self):
+        while True:
+            if(input("Please Enter Command: ") == 'connect'):
+                self.get_socket()
+                self.connect_to_server()
+                self.send_console_input_forever()
+            else:
+                print('Should firstly connect to CRDS')
     def get_socket(self):
         try:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
