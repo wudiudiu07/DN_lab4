@@ -81,10 +81,17 @@ class Receiver:
         while True:
             if(input("Please Enter Command: ") == 'connect'):
                 self.get_socket()
-                self.connect_to_server()
-                self.send_console_input_forever()
+                self.connect_to_sender()
+                self.receive_forever()
             else:
                 print('Should firstly connect to CRDS')
+    def connect_to_sender(self):
+        try:
+            # Connect to the sender using its socket address tuple.
+            self.socket.connect((Client.SERVER_HOSTNAME, Server.PORT))
+        except Exception as msg:
+            print(msg)
+            sys.exit(1)
     def get_socket(self):
         try:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
