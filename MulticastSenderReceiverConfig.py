@@ -129,11 +129,10 @@ class Receiver:
     RECV_SIZE = 256
 
     def __init__(self):
-
-        print("Bind address/port = ", BIND_ADDRESS_PORT)
+        self.connect_to_CRDS()
         
-        self.get_socket()
-        self.receive_forever()
+       
+        
     def connect_to_CRDS(self):
         while True:
             if(input("Please Enter Command: ") == 'connect'):
@@ -151,7 +150,9 @@ class Receiver:
             sys.exit(1)
     def get_socket(self):
         try:
+            # Create an IPv4 TCP socket.
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            # Get socket layer socket options.
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, True)
 
             # Bind to an address/port. In multicast, this is viewed as
