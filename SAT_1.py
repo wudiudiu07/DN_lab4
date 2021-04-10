@@ -84,6 +84,7 @@ class Sender:
     
     def connection_handler(self, receiver):
         connection, address_port = receiver
+        flag = 0
         print("Connection received from {}.".format(address_port))
 
         while True:
@@ -125,12 +126,15 @@ class Sender:
 
 
             elif(recvd_str == 'deleteroom'):
-                if recvd_arg in self.chatroom:
-                    self.chatroom.remove(recvd_arg)
-                    Message = "Successfully delete the room"
-                    self.socket.sendto(Message.encode('utf-8'),address)
-                    print("Sent: ", Message)
-                else:
+                for element in self.chatroom:
+                    if recvd_arg[0] == element[0]:
+                       flag = 1
+                       self.chatroom.remove(recvd_arg)
+                       Message = "Successfully delete the room"
+                       self.socket.sendto(Message.encode('utf-8'),address)
+                       print("Sent: ", Message)
+                       break;
+                if flag == 1:
                     Message = "No matched chat room. Please use another name"
                     self.socket.sendto(Message.encode('utf-8'),address)
                     print("Sent: ", Message)
@@ -147,7 +151,7 @@ class Sender:
 
 class Receiver:
 
-    RECV_SIZE = 256
+    RECV_SIZE = 2048
 
     def __init__(self):
 
