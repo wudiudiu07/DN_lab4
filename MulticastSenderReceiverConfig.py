@@ -68,7 +68,58 @@ class Sender:
         finally:
             self.socket.close()
             sys.exit(1)
+    def connection_handler(self, receiver):
+        connection, address_port = receiver
+        print("Connection received from {}.".format(address_port))
 
+        while True:
+            recvd_bytes = connection.recv(Server.RECV_SIZE)
+            if len(recvd_bytes) == 0:
+                print("Closing {} client connection ... ".format(address_port))
+                connection.close()
+                break
+            recvd_str = recvd_bytes.decode(Server.MSG_ENCODING)
+            print("Received: ", recvd_str)
+
+            recvd_str, *recvd_arg = recvd_str.split()
+
+            if(recvd_str == 'getdir'):
+                
+            # Send the received bytes back to the receiver.
+                connection.sendall(str(CDR).encode(Sender.MSG_ENCODING))
+                print("Sent: ", CDR)
+
+            if(recvd_str == 'makeroom'):
+                if recvd_arg[0] in CDR:
+                    Message = "Cannot use this name. Please use another name"
+                    connection.sendall(Message.encode(Server.MSG_ENCODING))
+                    print("Sent: ", Message)
+                else:
+                    if [recvd_arg[1], recvd_arg[2]] in CDR.values():
+                        Message = "The chat room IP address/port already exists. Please use another name"
+                        connection.sendall(Message.encode(Server.MSG_ENCODING))
+                        print("Sent: ", Message)
+                    else:
+                        CDR[recvd_arg[0]] = [recvd_arg[1], int(recvd_arg[2])]
+                        Message = "The chat room is created"
+                        connection.sendall(Message.encode(Server.MSG_ENCODING))
+                        print("Sent: ", Message)
+
+            if(recvd_str == 'deleteroom'):
+                if recvd_arg[0] in CDR:
+                    CDR.pop(recvd_arg[0])
+                    Message = "Successfully delete the room"
+                    connection.sendall(Message.encode(Server.MSG_ENCODING))
+                    print("Sent: ", Message)
+                else:
+                    Message = "No matched chat room. Please use another name"
+                    connection.sendall(Message.encode(Server.MSG_ENCODING))
+                    print("Sent: ", Message)
+
+            if(recvd_str == 'bye'):
+                print("Closing {} receiver connection ... ".format(address_port))
+                connection.close()
+                break
 ########################################################################
 # Echo Receiver class
 ########################################################################
