@@ -95,7 +95,7 @@ class Sender:
             recvd_str = recvd_bytes.decode(Sender.MSG_ENCODING)
             print("Received: ", recvd_str)
             
-            #recvd_str, *recvd_arg = recvd_str.split()
+            recvd_str, *recvd_arg = recvd_str.split()
 
             if(recvd_str == 'getdir'):
                 CDR = []
@@ -125,14 +125,14 @@ class Sender:
 
 
             elif(recvd_str == 'deleteroom'):
-                if recvd_str[0] in self.chatroom:
-                    self.chatroom.pop(recvd_arg[0])
+                if recvd_arg in self.chatroom:
+                    self.chatroom.remove(recvd_arg)
                     Message = "Successfully delete the room"
-                    connection.sendall(Message.encode(Server.MSG_ENCODING))
+                    self.socket.sendto(Message.encode('utf-8'),address)
                     print("Sent: ", Message)
                 else:
                     Message = "No matched chat room. Please use another name"
-                    connection.sendall(Message.encode(Server.MSG_ENCODING))
+                    self.socket.sendto(Message.encode('utf-8'),address)
                     print("Sent: ", Message)
 
 
