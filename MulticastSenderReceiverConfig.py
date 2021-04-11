@@ -173,6 +173,10 @@ class Client:
             try:
                 self.user_input = input("> ")
                 if(self.user_input.startswith('chat')):
+                    # getdir to get the latest CDR
+                    self.socket.sendall('getdir'.encode(Server.MSG_ENCODING))
+                    self.connection_receive()
+
                     if len(self.user_input.split())!=2:
                         print('Invalid input. chat <chat room name>')
                     else:
@@ -287,9 +291,12 @@ class Client:
                 self.socket.close()
                 sys.exit(1)
                 
-            if(self.user_input == "getdir"):
+            if self.user_input == "getdir":
                 self.CDR_Client = ast.literal_eval(recvd_bytes_decoded)
-            print("List of rooms: ", recvd_bytes_decoded)
+                print("List of rooms: ", recvd_bytes_decoded)
+
+            elif self.user_input.startswith('chat'):
+                self.CDR_Client = ast.literal_eval(recvd_bytes_decoded)
 
         except Exception as msg:
             print(msg)
