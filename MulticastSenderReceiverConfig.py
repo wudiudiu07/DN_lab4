@@ -97,7 +97,7 @@ class Server:
                     connection.sendall(Message.encode(Server.MSG_ENCODING))
                     print("Sent: ", Message)
                 else:
-                    if [recvd_arg[1], recvd_arg[2]] in CDR.values():
+                    if [recvd_arg[1], int(recvd_arg[2])] in CDR.values():
                         Message = "The chat room IP address/port already exists."
                         connection.sendall(Message.encode(Server.MSG_ENCODING))
                         print("Sent: ", Message)
@@ -263,6 +263,7 @@ class Client:
         multicast_if_bytes = socket.inet_aton(RX_IFACE_ADDRESS)
         multicast_request = multicast_group_bytes + multicast_if_bytes
         self.socket_rec.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, multicast_request)
+        self.prompt()
         while (self.chat == 1):
             try:
                 #self.socket_rec.setblocking(False) 
@@ -310,6 +311,9 @@ class Client:
 
             elif self.user_input.startswith('chat'):
                 self.CDR_Client = ast.literal_eval(recvd_bytes_decoded)
+
+            else:
+                print(recvd_bytes_decoded)
 
         except Exception as msg:
             print(msg)
