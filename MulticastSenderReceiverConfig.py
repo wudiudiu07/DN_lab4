@@ -138,7 +138,8 @@ class Client:
     TTL_BYTE = TTL.to_bytes(TTL_SIZE, byteorder='big')
     
     def __init__(self):
-        self.chat =0 
+        self.chat = 0
+        self.new_line = 1
         self.CDR_Client = {}
         self.name = socket.gethostname()
         self.run()
@@ -215,10 +216,9 @@ class Client:
                 self.socket.close()
                 sys.exit(1)
 
-
-
-      
-
+    def prompt(self) :
+        sys.stdout.write('Enter your message: ')
+        sys.stdout.flush()
 
     def get_socket_UDP(self):
 
@@ -235,7 +235,11 @@ class Client:
         while True:
             
             try:
-                self.socket_sender.sendto(('\n' + self.name + ': ' + input('Chat mode: ')).encode('utf-8'), self.address)
+                # User enter a message
+                msg = sys.stdin.readline()
+                self.new_line = 0
+                self.socket_sender.sendto(('<' + self.name + '> ' + msg).encode('utf-8'), self.address)
+
             except KeyboardInterrupt:
                 print("exit chat mode");
                 #self.socket_sender.sendto(('end').encode('utf-8'), self.address)
@@ -270,7 +274,11 @@ class Client:
                     data, address_port = self.socket_rec.recvfrom(RECV_SIZE)
                     recvd_bytes_decoded = data.decode("utf-8")
                     if (self.chat == 1):
+                        if (self.new_line == 1):
+                            print()
+                        self.new_line = 1
                         print(recvd_bytes_decoded)
+                        self.prompt()
                     if len(data) == 0:
                         print("Closing server connection ... ")
                         self.socket_rec.close()
