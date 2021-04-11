@@ -133,9 +133,9 @@ class Client:
 
     RECV_BUFFER_SIZE = 1024
     
-    
-    
-    
+    TTL = 1 # Hops
+    TTL_SIZE = 1 # Bytes
+    TTL_BYTE = TTL.to_bytes(TTL_SIZE, byteorder='big')
     
     def __init__(self):
         self.chat =0 
@@ -188,7 +188,7 @@ class Client:
                     else:
                          self.name = self.user_input.split()[1]
 
-                else:
+                else:#connection
                     if self.user_input.split()[0] in command:
                         self.socket.sendall(self.user_input.encode(Server.MSG_ENCODING))
                         self.connection_receive()
@@ -212,14 +212,12 @@ class Client:
 
 
     def get_socket_UDP(self):
-        TTL = 1 # Hops
-        TTL_SIZE = 1 # Bytes
-        TTL_BYTE = TTL.to_bytes(TTL_SIZE, byteorder='big')
+
 
         try:
             self.socket_sender = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             #self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-            self.socket_sender.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, TTL_BYTE)
+            self.socket_sender.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, Client.TTL_BYTE)
             # self.socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, Client.TTL)  # this works fine too
         except Exception as msg:
             print(msg)
@@ -283,13 +281,15 @@ class Client:
         try:
         
             recvd_bytes = self.socket.recv(Client.RECV_BUFFER_SIZE)
+            recvd_bytes_decoded = recvd_bytes.decode(Server.MSG_ENCODING)
             if len(recvd_bytes) == 0:
                 print("Closing server connection ... ")
                 self.socket.close()
                 sys.exit(1)
+                
             if(self.user_input == "getdir"):
-                self.CDR_Client = ast.literal_eval(recvd_bytes.decode(Server.MSG_ENCODING))
-            print("Received: ", recvd_bytes.decode(Server.MSG_ENCODING))
+                self.CDR_Client = ast.literal_eval(recvd_bytes_decoded)
+            print("List of rooms: ", recvd_bytes_decoded)
 
         except Exception as msg:
             print(msg)
