@@ -192,10 +192,15 @@ class Client:
                     else:
                          self.name = self.user_input.split()[1]
 
+                elif(self.user_input == ''):
+                    print('Please enter a nonblank command.')
+
                 else:#connection
                     if self.user_input.split()[0] in command:
                         self.socket.sendall(self.user_input.encode(Server.MSG_ENCODING))
                         self.connection_receive()
+                    else:
+                        print('Please enter a valid command')
                     
                 if(self.chat):
                     self.address = (self.CDR_Client[self.user_input.split()[1]][0],self.CDR_Client[self.user_input.split()[1]][1])
