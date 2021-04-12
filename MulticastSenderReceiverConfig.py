@@ -256,11 +256,19 @@ class Client:
         # Bind to an address/port. In multicast, this is viewed as
         # a "filter" that determines what packets make it to the
         # UDP app.
+         ############################################################
+            # The multicast_request must contain a bytes object
+            # consisting of 8 bytes. The first 4 bytes are the
+            # multicast group address. The second 4 bytes are the
+            # interface address to be used. An all zeros I/F address
+            # means all network interfaces.
+            ############################################################
         self.socket_rec.bind((RX_IFACE_ADDRESS, self.address[1]))
         multicast_group_bytes = socket.inet_aton(self.address[0])
         print("Multicast Group: ", self.address)
         # Set up the interface to be used.
         multicast_if_bytes = socket.inet_aton(RX_IFACE_ADDRESS)
+        #multicast request
         multicast_request = multicast_group_bytes + multicast_if_bytes
         self.socket_rec.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, multicast_request)
         self.prompt()
@@ -268,10 +276,8 @@ class Client:
             try:
                 #self.socket_rec.setblocking(False) 
                 if (self.chat == 0):
-                    #print("receive exit chat mode"); 
                     break
                 else:
-                    #print("waiting on recv")
                     data, address_port = self.socket_rec.recvfrom(RECV_SIZE)
                     recvd_bytes_decoded = data.decode("utf-8")
                     if (self.chat == 1):
